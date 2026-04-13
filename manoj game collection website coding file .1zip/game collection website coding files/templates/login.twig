@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - {{ site_name }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+        <style>
+        :root {
+            --primary-color: #1a237e;
+            --secondary-color: #00bcd4;
+            --accent-color: #ff5722;
+            --dark-bg: #0a0a0a;
+            --card-bg: #1a1a1a;
+            --text-light: #ffffff;
+            --text-muted: #b0b0b0;
+            --border-color: #333333;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--dark-bg);
+            color: var(--text-light);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .game-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            color: var(--text-light);
+        }
+        
+        .game-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #283593 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            border-bottom: 5px solid var(--secondary-color);
+        }
+        
+        .game-logo {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .game-body {
+            padding: 2rem;
+        }
+        
+        .input-group {
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+        
+        .input-group:focus-within {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 0.25rem rgba(0, 188, 212, 0.25);
+        }
+        
+        .input-group-text {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1rem;
+        }
+        
+        .form-control {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            padding: 0.75rem;
+            font-size: 1rem;
+            color: var(--text-light);
+        }
+        
+        .form-control:focus {
+            box-shadow: none;
+            background: rgba(255, 255, 255, 0.15);
+            color: var(--text-light);
+        }
+        
+        .form-control::placeholder {
+            color: var(--text-muted);
+        }
+        
+        .form-label {
+            color: var(--text-light);
+            font-weight: 600;
+        }
+        
+        .btn-game {
+            background: linear-gradient(135deg, var(--secondary-color) 0%, #0097a7 100%);
+            border: none;
+            color: white;
+            padding: 0.75rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        .btn-game:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 188, 212, 0.3);
+        }
+        
+        .btn-game:active {
+            transform: translateY(-1px);
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .register-link {
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .register-link:hover {
+            color: var(--accent-color);
+            text-decoration: underline;
+        }
+        
+        .game-footer {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1rem;
+            text-align: center;
+            border-top: 1px solid var(--border-color);
+            border-radius: 0 0 20px 20px;
+        }
+        
+        .alert-danger {
+            background: linear-gradient(135deg, rgba(255, 82, 82, 0.2) 0%, rgba(211, 47, 47, 0.3) 100%);
+            color: var(--text-light);
+            border: none;
+            border-radius: 10px;
+            animation: shake 0.5s ease-in-out;
+            border-left: 4px solid var(--accent-color);
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+        
+        .form-text {
+            color: var(--text-muted);
+        }
+        
+        .text-muted {
+            color: var(--text-muted) !important;
+        }
+        
+        .btn-outline-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--border-color);
+            color: var(--text-light);
+        }
+        
+        .btn-outline-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: var(--secondary-color);
+            color: var(--text-light);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-5">
+                <div class="game-card">
+                    <div class="game-header">
+                        <div class="game-logo">
+                            <i class="bi bi-controller"></i>
+                        </div>
+                        <h1 class="h3 mb-2">{{ site_name }}</h1>
+                        <p class="mb-0 opacity-75">Track your gaming journey</p>
+                    </div>
+                    
+                    <div class="game-body">
+                        {% if error %}
+                        <div class="alert alert-danger mb-4" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ error }}
+                        </div>
+                        {% endif %}
+                        
+                        <form method="POST" id="loginForm">
+                            <div class="mb-4">
+                                <label for="username" class="form-label fw-bold">Username</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="bi bi-person-fill"></i>
+                                    </span>
+                                    <input type="text" 
+                                           name="username" 
+                                           id="username" 
+                                           class="form-control" 
+                                           placeholder="Enter your username" 
+                                           required 
+                                           autofocus>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label for="password" class="form-label fw-bold">Password</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="bi bi-lock-fill"></i>
+                                    </span>
+                                    <input type="password" 
+                                           name="password" 
+                                           id="password" 
+                                           class="form-control" 
+                                           placeholder="Enter your password" 
+                                           required>
+                                    <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="d-grid gap-2 mb-4">
+                                <button type="submit" class="btn-game pulse">
+                                    <i class="bi bi-play-fill me-2"></i>Start Gaming
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <div class="game-footer">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted">
+                                <i class="bi bi-person-badge me-1"></i>
+                                {{ author }} ({{ student_id }})
+                            </small>
+                            <small class="text-muted">
+                                <i class="bi bi-calendar3 me-1"></i>
+                                {{ current_year }}
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('togglePassword').addEventListener('click', function() {
+            const passwordInput = document.getElementById('password');
+            const icon = this.querySelector('i');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('bi-eye');
+                icon.classList.add('bi-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('bi-eye-slash');
+                icon.classList.add('bi-eye');
+            }
+        });
+
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            
+            if (!username || !password) {
+                e.preventDefault();
+                alert('Please fill in all fields');
+                return false;
+            }
+            
+            const submitBtn = this.querySelector('button[type="submit"]');
+            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Loading...';
+            submitBtn.disabled = true;
+            submitBtn.classList.remove('pulse');
+        });
+    </script>
+</body>
+</html>
