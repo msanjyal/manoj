@@ -1,0 +1,205 @@
+{% extends 'base.twig' %}
+
+{% block title %}{{ game.title }} - Details{% endblock %}
+
+{% set current_page = 'index' %}
+
+{% block content %}
+<div class="container">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="index.php">Collection</a></li>
+            <li class="breadcrumb-item active">{{ game.title|slice(0, 30) }}{% if game.title|length > 30 %}...{% endif %}</li>
+        </ol>
+    </nav>
+
+    <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h3 class="mb-0">{{ game.title }}</h3>
+            <div class="btn-group">
+                <a href="edit_game.php?id={{ game.game_id }}" class="btn btn-outline-light">
+                    <i class="bi bi-pencil me-1"></i>Edit
+                </a>
+                <a href="index.php" class="btn btn-outline-light">
+                    <i class="bi bi-arrow-left me-1"></i>Back
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <h6 class="text-muted mb-2">
+                                    <i class="bi bi-tag me-2"></i>Genre
+                                </h6>
+                                <span class="badge badge-genre fs-6">{{ game.genre }}</span>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <h6 class="text-muted mb-2">
+                                    <i class="bi bi-laptop me-2"></i>Platform
+                                </h6>
+                                <span class="badge badge-platform fs-6">{{ game.platform }}</span>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <h6 class="text-muted mb-2">
+                                    <i class="bi bi-calendar3 me-2"></i>Release Year
+                                </h6>
+                                <div class="fs-5">{{ game.release_year ?: 'N/A' }}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <h6 class="text-muted mb-2">
+                                    <i class="bi bi-building me-2"></i>Developer
+                                </h6>
+                                <div class="fs-5">{{ game.developer ?: 'N/A' }}</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <h6 class="text-muted mb-2">
+                                    <i class="bi bi-building-gear me-2"></i>Publisher
+                                </h6>
+                                <div class="fs-5">{{ game.publisher ?: 'N/A' }}</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <h6 class="text-muted mb-2">
+                                    <i class="bi bi-currency-pound me-2"></i>Price
+                                </h6>
+                                <div class="fs-5">{{ game.price ? '£' ~ game.price : 'N/A' }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h6 class="text-muted mb-2">
+                            <i class="bi bi-chat-left-text me-2"></i>Description
+                        </h6>
+                        <div class="card bg-dark p-3">
+                            {% if game.description %}
+                                {{ game.description|nl2br }}
+                            {% else %}
+                                <p class="text-muted fst-italic">No description provided</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="card bg-dark border-secondary">
+                        <div class="card-body">
+                            <h5 class="mb-4 border-bottom pb-3">Game Progress</h5>
+                            
+                            <div class="mb-4">
+                                <h6 class="text-muted mb-3">Status</h6>
+                                <span class="completion-badge {{ game.completion_status|lower|replace({' ': '-'}) }} fs-6 px-3 py-2 d-inline-block">
+                                    {{ game.completion_status }}
+                                </span>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <h6 class="text-muted mb-3">Rating</h6>
+                                {% if game.rating %}
+                                <div class="d-flex align-items-center">
+                                    <div class="display-6 fw-bold me-3">{{ game.rating }}/10</div>
+                                    <div>
+                                        {% for i in 1..5 %}
+                                            {% if game.rating >= i*2 %}
+                                                <i class="bi bi-star-fill rating-star fs-4"></i>
+                                            {% elseif game.rating >= (i*2)-1 %}
+                                                <i class="bi bi-star-half rating-star fs-4"></i>
+                                            {% else %}
+                                                <i class="bi bi-star rating-star fs-4"></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                {% else %}
+                                <p class="text-muted fst-italic">Not rated</p>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="mb-4">
+                                <h6 class="text-muted mb-3">
+                                    <i class="bi bi-clock-history me-2"></i>Playtime
+                                </h6>
+                                <div class="display-6 fw-bold">
+                                    {{ game.playtime_hours ? game.playtime_hours ~ ' hrs' : 'N/A' }}
+                                </div>
+                            </div>
+                            
+                            {% if game.purchase_date %}
+                            <div class="mb-4">
+                                <h6 class="text-muted mb-3">
+                                    <i class="bi bi-cart-check me-2"></i>Purchase Date
+                                </h6>
+                                <div class="fs-5">{{ game.purchase_date }}</div>
+                            </div>
+                            {% endif %}
+                            
+                            <div class="mb-4">
+                                <h6 class="text-muted mb-3">Features</h6>
+                                <div class="d-flex flex-wrap gap-2">
+                                    {% if game.is_multiplayer %}
+                                    <span class="badge bg-info">
+                                        <i class="bi bi-people me-1"></i>Multiplayer
+                                    </span>
+                                    {% endif %}
+                                    
+                                    {% if game.has_dlc %}
+                                    <span class="badge bg-info">
+                                        <i class="bi bi-puzzle me-1"></i>Has DLC
+                                    </span>
+                                    {% endif %}
+                                    
+                                    {% if game.is_digital %}
+                                    <span class="badge bg-info">
+                                        <i class="bi bi-download me-1"></i>Digital
+                                    </span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4 pt-4 border-top">
+                                <h6 class="text-muted mb-3">Game ID</h6>
+                                <div class="text-center">
+                                    <span class="badge bg-secondary fs-6">#{{ game.game_id }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-4 pt-4 border-top">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-muted mb-3">Date Added</h6>
+                        <div>{{ game.created_at }}</div>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-muted mb-3">Last Updated</h6>
+                        <div>{{ game.updated_at }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card-footer">
+            <div class="d-flex justify-content-between">
+                <a href="edit_game.php?id={{ game.game_id }}" class="btn btn-primary">
+                    <i class="bi bi-pencil-square me-2"></i>Edit Game
+                </a>
+                <a href="delete_game.php?id={{ game.game_id }}" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete {{ game.title }}?')">
+                    <i class="bi bi-trash me-2"></i>Delete Game
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

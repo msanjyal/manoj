@@ -1,0 +1,174 @@
+{% extends 'base.twig' %}
+
+{% block title %}Edit Game - {{ game.title }}{% endblock %}
+
+{% set current_page = 'index' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">
+                    <i class="bi bi-pencil-square me-2"></i>Edit Game: {{ game.title }}
+                </h4>
+            </div>
+            <div class="card-body">
+                
+                {% if errors is not empty %}
+                <div class="alert alert-danger">
+                    <h5>
+                        <i class="bi bi-exclamation-triangle me-2"></i>
+                        Please fix the following errors:
+                    </h5>
+                    <ul class="mb-0">
+                        {% for error in errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+                
+                <form method="POST" id="editForm">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Game Title *</label>
+                                <input type="text" name="title" class="form-control" value="{{ game.title }}" required maxlength="255">
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Genre</label>
+                                    <input type="text" name="genre" class="form-control" value="{{ game.genre }}" list="genreSuggestions" maxlength="100">
+                                    <datalist id="genreSuggestions">
+                                        {% for genre in existing_genres %}
+                                            <option value="{{ genre.genre }}">
+                                        {% endfor %}
+                                    </datalist>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Platform</label>
+                                    <input type="text" name="platform" class="form-control" value="{{ game.platform }}" list="platformSuggestions" maxlength="100">
+                                    <datalist id="platformSuggestions">
+                                        {% for platform in existing_platforms %}
+                                            <option value="{{ platform.platform }}">
+                                        {% endfor %}
+                                    </datalist>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Release Year</label>
+                                    <input type="number" name="release_year" class="form-control" value="{{ game.release_year }}" min="1970" max="{{ current_year + 5 }}">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Price (£)</label>
+                                    <input type="number" step="0.01" name="price" class="form-control" value="{{ game.price }}" min="0">
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Developer</label>
+                                    <input type="text" name="developer" class="form-control" value="{{ game.developer }}" maxlength="255">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Publisher</label>
+                                    <input type="text" name="publisher" class="form-control" value="{{ game.publisher }}" maxlength="255">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <h5 class="mb-3 border-bottom pb-2">Game Progress</h5>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Playtime (hours)</label>
+                                    <input type="number" step="0.1" name="playtime_hours" class="form-control" value="{{ game.playtime_hours }}" min="0">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Rating (0-10)</label>
+                                    <input type="number" step="0.1" name="rating" class="form-control" value="{{ game.rating }}" min="0" max="10">
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Completion Status</label>
+                                <select name="completion_status" class="form-select">
+                                    <option value="Not Started" {{ game.completion_status == 'Not Started' ? 'selected' : '' }}>Not Started</option>
+                                    <option value="In Progress" {{ game.completion_status == 'In Progress' ? 'selected' : '' }}>In Progress</option>
+                                    <option value="Completed" {{ game.completion_status == 'Completed' ? 'selected' : '' }}>Completed</option>
+                                    <option value="Dropped" {{ game.completion_status == 'Dropped' ? 'selected' : '' }}>Dropped</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Purchase Date</label>
+                                <input type="date" name="purchase_date" class="form-control" value="{{ game.purchase_date }}">
+                            </div>
+                            
+                            <h5 class="mb-3 border-bottom pb-2">Additional Information</h5>
+                            <div class="mb-3">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" name="is_multiplayer" id="is_multiplayer" value="1" {{ game.is_multiplayer ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="is_multiplayer">Multiplayer</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" name="has_dlc" id="has_dlc" value="1" {{ game.has_dlc ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="has_dlc">Has DLC</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" name="is_digital" id="is_digital" value="1" {{ game.is_digital ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="is_digital">Digital Copy</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Description</label>
+                        <textarea name="description" class="form-control" rows="3" maxlength="1000">{{ game.description }}</textarea>
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                        <a href="index.php" class="btn btn-outline-light me-2">
+                            <i class="bi bi-x-circle me-1"></i>Cancel
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-save me-1"></i>Save Changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.getElementById('editForm').addEventListener('submit', function(e) {
+    const title = this.querySelector('[name="title"]').value.trim();
+    
+    if (!title) {
+        e.preventDefault();
+        alert('Game title is required');
+        return false;
+    }
+    
+    const rating = this.querySelector('[name="rating"]').value;
+    if (rating && (rating < 0 || rating > 10)) {
+        e.preventDefault();
+        alert('Rating must be between 0 and 10');
+        return false;
+    }
+    
+    const submitBtn = this.querySelector('button[type="submit"]');
+    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Saving...';
+    submitBtn.disabled = true;
+});
+</script>
+{% endblock %}
